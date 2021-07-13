@@ -1,10 +1,12 @@
-                                                                                                                                     
+${AnsiColor.BRIGHT_YELLOW}${AnsiStyle.BOLD}                                                                                                                             
 ,------. ,------.      ,--.         ,---.  ,------. ,--.       ,------. ,------.  ,-----.  ,-----.,------.,------.  ,--. ,--.,------. ,------. 
 |  .--. '|  .--. '     |  |,-----. /  O  \ |  .--. '|  |,-----.|  .--. '|  .--. ''  .-.  ''  .--./|  .---'|  .-.  \ |  | |  ||  .--. '|  .---' 
 |  '--' ||  '--'.',--. |  |'-----'|  .-.  ||  '--' ||  |'-----'|  '--' ||  '--'.'|  | |  ||  |    |  `--, |  |  \  :|  | |  ||  '--'.'|  `--,  
 |  | --' |  |\  \ |  '-'  /       |  | |  ||  | --' |  |       |  | --' |  |\  \ '  '-'  ''  '--'\|  `---.|  '--'  /'  '-'  '|  |\  \ |  `---. 
 `--'     `--' '--' `-----'        `--' `--'`--'     `--'       `--'     `--' '--' `-----'  `-----'`------'`-------'  `-----' `--' '--'`------' 
-
-:: Versão da API${application.formatted-version}
-:: ${application.title}
-:: Versão Spring Boot ${spring-boot.version} - ${spring-boot.formatted-version}
+${AnsiColor.CYAN}${AnsiStyle.BOLD}
+:: Versão do Java: (v${java.version})
+:: Nome do Projeto: ${application.title}
+:: Versão da API: ${application.version}
+:: Versão Spring Boot utilizado: ${spring-boot.version} :: ${spring-boot.formatted-version}
+:: Autor:: Emanuel Gabriel Sousa
