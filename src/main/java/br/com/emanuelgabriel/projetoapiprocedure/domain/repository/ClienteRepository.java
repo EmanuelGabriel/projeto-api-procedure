@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import br.com.emanuelgabriel.projetoapiprocedure.domain.entity.Cliente;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long>{
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
 	Cliente findByCpf(String cpf);
 }

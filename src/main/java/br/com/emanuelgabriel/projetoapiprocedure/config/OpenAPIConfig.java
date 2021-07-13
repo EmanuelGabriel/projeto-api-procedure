@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 
 
 @OpenAPIDefinition(
-		info = @Info(description = "API de gerenciamento e acesso a procedure", 
+		info = @Info(description = "API de gerenciamento e acesso a procedure no SQL SERVER 2019", 
 		termsOfService = "Termos de serviço",
 title = "Projeto - API - Procedure", 
 version = "1.0.0", 

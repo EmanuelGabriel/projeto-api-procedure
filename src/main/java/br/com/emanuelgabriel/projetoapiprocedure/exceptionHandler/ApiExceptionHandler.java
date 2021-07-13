@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.emanuelgabriel.projetoapiprocedure.exceptionHandler.Problema.Campo;
+import br.com.emanuelgabriel.projetoapiprocedure.services.exception.ObjNaoEncontradoException;
+import br.com.emanuelgabriel.projetoapiprocedure.services.exception.RegraNegocioException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -49,6 +53,43 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		problema.setCampos(campos);
 
 		return super.handleExceptionInternal(ex, problema, headers, status, request);
+	}
+
+	@ExceptionHandler(ObjNaoEncontradoException.class)
+	public ResponseEntity<?> entidadeNaoEncontradaException(ObjNaoEncontradoException ex, WebRequest request) {
+
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		TipoProblema tipoProblema = TipoProblema.RECURSO_NAO_ENCONTRADO;
+		String detalhe = ex.getMessage();
+
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema, detalhe).mensagem(detalhe).build();
+
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
+	@ExceptionHandler(RegraNegocioException.class)
+	public ResponseEntity<?> handleRegraNegocioException(RegraNegocioException ex, WebRequest request) {
+
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		TipoProblema tipoProblema = TipoProblema.ERRO_NEGOCIO;
+		String detalheErro = ex.getMessage();
+
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema, detalheErro).mensagem(detalheErro)
+				.build();
+
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<?> dataIntegrityException(DataIntegrityViolationException ex, WebRequest request) {
+
+		HttpStatus status = HttpStatus.CONFLICT;
+		TipoProblema tipoProblema = TipoProblema.ERRO_INTEGRIDADE_DADOS;
+		String detalhe = ex.getMessage();
+
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema, detalhe).mensagem(detalhe).build();
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
 	}
 
 	@Override

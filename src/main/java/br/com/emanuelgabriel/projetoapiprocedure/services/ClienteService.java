@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.request.ClienteModelInputRequest;
+import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.request.ClienteModelUpdateRequest;
 import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.response.ClienteModelResponse;
 import br.com.emanuelgabriel.projetoapiprocedure.domain.entity.Cliente;
 import br.com.emanuelgabriel.projetoapiprocedure.domain.mapper.ClienteModelMapper;
@@ -48,7 +49,7 @@ public class ClienteService {
 		Cliente clienteSalvo = this.clienteMapper.dtoToEntity(request);
 		clienteSalvo.setDataCadastro(LocalDateTime.now());
 
-		return this.clienteMapper.entityToDTO(clienteRepository.saveAndFlush(clienteSalvo));
+		return this.clienteMapper.entityToDTO(clienteRepository.save(clienteSalvo));
 
 	}
 
@@ -63,14 +64,31 @@ public class ClienteService {
 	}
 
 	@Transactional
-	public void remover(Long idCliente) {
+	public ClienteModelResponse update(Long idCliente, ClienteModelUpdateRequest request) {
+		log.info("Atualiza cliente por seu ID {} - body {}", idCliente, request);
+		return clienteRepository.findById(idCliente).map(cli -> {
+			cli.setDataAtualizacao(LocalDateTime.now());
+			cli.setEmail(request.getEmail());
+			cli.setNome(request.getNome());
+			cli.setTelefone(request.getTelefone());
+
+			return this.clienteMapper.entityToDTO(clienteRepository.save(cli));
+		}).orElseThrow(() -> new ObjNaoEncontradoException("Cliente de ID não encontrado"));
+
+	}
+
+	@Transactional
+	public boolean remover(Long idCliente) {
+		log.info("Remove um cliente por seu ID {}", idCliente);
 		try {
 
 			getById(idCliente);
 			clienteRepository.deleteById(idCliente);
+			return true;
 		} catch (Exception e) {
 			throw new DataIntegrityViolationException(MSG_IMPOSSIVEL_REMOVER);
 		}
+
 	}
 
 }
