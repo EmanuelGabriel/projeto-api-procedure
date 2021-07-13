@@ -1,6 +1,5 @@
 package br.com.emanuelgabriel.projetoapiprocedure.domain.mapper;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.request.ClienteModelInputRequest;
 import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.response.ClienteModelResponse;
 import br.com.emanuelgabriel.projetoapiprocedure.domain.entity.Cliente;
 import lombok.AllArgsConstructor;
@@ -29,6 +29,17 @@ public class ClienteModelMapper {
 	 */
 	public ClienteModelResponse entityToDTO(Cliente entity) {
 		return this.modelMapper.map(entity, ClienteModelResponse.class);
+	}
+
+	/**
+	 * Método responsável pela conversão de DTO para entidade
+	 * 
+	 * @author emanuel.sousa
+	 * @param dto
+	 * @return entity
+	 */
+	public Cliente dtoToEntity(ClienteModelInputRequest request) {
+		return this.modelMapper.map(request, Cliente.class);
 	}
 
 	/**
