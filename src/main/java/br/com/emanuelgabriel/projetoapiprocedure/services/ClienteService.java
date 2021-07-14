@@ -20,6 +20,12 @@ import br.com.emanuelgabriel.projetoapiprocedure.services.exception.ObjNaoEncont
 import br.com.emanuelgabriel.projetoapiprocedure.services.exception.RegraNegocioException;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 
+ * @author emanuel.sousa
+ *
+ */
+
 @Slf4j
 @Service
 public class ClienteService {
@@ -51,6 +57,26 @@ public class ClienteService {
 
 		return this.clienteMapper.entityToDTO(clienteRepository.save(clienteSalvo));
 
+	}
+
+	public ClienteModelResponse getClientePorRG(String rg) {
+		log.info("Busca cliente por seu RG {}", rg);
+		Cliente clienteRg = clienteRepository.findByRg(rg);
+		if (clienteRg == null) {
+			throw new ObjNaoEncontradoException("Cliente de RG não encontrado");
+		}
+
+		return this.clienteMapper.entityToDTO(clienteRg);
+	}
+
+	public ClienteModelResponse getClientePorCPF(String cpf) {
+		log.info("Busca cliente por seu CPF {}", cpf);
+		Cliente cliente = clienteRepository.findByCpf(cpf);
+		if (cliente == null) {
+			throw new ObjNaoEncontradoException("Cliente de CPF não encontrado");
+		}
+
+		return this.clienteMapper.entityToDTO(cliente);
 	}
 
 	public ClienteModelResponse getById(Long idCliente) {

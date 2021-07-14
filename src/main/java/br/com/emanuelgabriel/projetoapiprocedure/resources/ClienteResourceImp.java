@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.request.ClienteModelInputRequest;
+import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.request.ClienteModelUpdateRequest;
 import br.com.emanuelgabriel.projetoapiprocedure.domain.dto.response.ClienteModelResponse;
 import br.com.emanuelgabriel.projetoapiprocedure.services.ClienteService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,6 +58,20 @@ public class ClienteResourceImp {
 				.buildAndExpand(request.getCpf()).toUri();
 		return ResponseEntity.created(location).body(clienteService.criar(request));
 	}
+	
+	@GetMapping(value = "{rg}/rg")
+	public ResponseEntity<ClienteModelResponse> getClientePorRG(@PathVariable String rg){
+		log.info("GET /v1/clientes/{}/rg", rg);
+		ClienteModelResponse rgCliente = clienteService.getClientePorRG(rg);
+		return rgCliente != null ? ResponseEntity.ok().body(rgCliente) : ResponseEntity.notFound().build();
+	}
+	
+	@GetMapping(value = "{cpf}/cpf")
+	public ResponseEntity<ClienteModelResponse> getClientePorCpf(@PathVariable String cpf){
+		log.info("GET /v1/clientes/{}/cpf", cpf);
+		ClienteModelResponse cpfCliente = clienteService.getClientePorCPF(cpf);
+		return cpfCliente != null ? ResponseEntity.ok().body(cpfCliente) : ResponseEntity.notFound().build();
+	}
 
 	@GetMapping(value = "{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ClienteModelResponse> getById(@PathVariable Long idCliente) {
@@ -63,6 +79,13 @@ public class ClienteResourceImp {
 		ClienteModelResponse clientePorIdResponse = clienteService.getById(idCliente);
 		return clientePorIdResponse != null ? ResponseEntity.ok().body(clientePorIdResponse)
 				: ResponseEntity.notFound().build();
+	}
+
+	@PutMapping(value = "{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ClienteModelResponse> update(@PathVariable Long idCliente, @Valid @RequestBody ClienteModelUpdateRequest request) {
+		log.info("PUT /v1/clientes/{} - body {}", idCliente, request);
+		ClienteModelResponse update = clienteService.update(idCliente, request);
+		return update != null ? ResponseEntity.ok().body(update) : ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping(value = "/{idCliente}", produces = MediaType.APPLICATION_JSON_VALUE)
